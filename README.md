@@ -26,7 +26,8 @@ npm install
 
 ### Update config
 
-Update the ```config.js``` file with your UAA url, clientID, and base64 client credentials.
+1. Update the ```config.js``` file with your UAA url, clientID, and base64 client credentials.
+2. The app uses Expo's AuthSession to open a browser and authenticate with the UAA. Once authenticated, it redirects the user back to the app. We need to whitelist the redirect_uri with our UAA. You can get the redirect URL in the debugger console when you start the app. It will be in the following format: ```https://auth.expo.io/@your-username/your-app-slug```
 
 ### Running the app
 
