@@ -16,12 +16,19 @@ cd reactnative-predix
 2. Install Expo for [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en) or for the [iphone](https://itunes.apple.com/us/app/expo-client/id982107779?mt=8).
 3. Install [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) for iphone simulators or [Genymotion](https://www.genymotion.com/) for Android emulators.
 
+### Install dependencies
 
-### Running the app
-Run 
+Run the following command to install the app's dependencies.
 ```
 npm install
 ```
+
+### Update config
+
+Update the ```config.js``` file with your UAA url, clientID, and base64 client credentials.
+
+### Running the app
+
 Run ```npm start``` to start the packager. 
 
 You will be presented with a QR code and a couple of options. Scan the QR code with the Expo app on your phone to start it on your phone or enter ```i``` to start an iphone simulator.
