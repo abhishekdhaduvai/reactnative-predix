@@ -1,7 +1,8 @@
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
-## Getting Started
+This app provides a starting point for developers to build a React Native app using Predix services. The app manages state using Redux and is set up with action creators to fetch a token from the UAA and store it in the device's local storage.
 
+## Getting Started
 ### Clone the repository
 
 Clone the repository or download and extract
@@ -13,7 +14,7 @@ cd reactnative-predix
 ### Install tools
 
 1. Install [node](https://nodejs.org/en/). This includes npm - the node package manager.
-2. Install Expo for [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en) or for the [iphone](https://itunes.apple.com/us/app/expo-client/id982107779?mt=8).
+2. (Optional) Install Expo for [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en) or for the [iphone](https://itunes.apple.com/us/app/expo-client/id982107779?mt=8).
 3. Install [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) for iphone simulators or [Genymotion](https://www.genymotion.com/) for Android emulators.
 
 ### Install dependencies
