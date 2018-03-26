@@ -6,11 +6,11 @@ import * as config from '../config';
 export const getUserInfo = () => {
   return async (dispatch) => {
 
-    //Try to get token from LocalStorage
+    // Try to get token from LocalStorage
     let token = await AsyncStorage.getItem('token');    
 
-    //If token exists, get userinfo from UAA
     if(token) {
+      // If token exists, get userinfo from UAA
       const headers = {
         Authorization: `Bearer ${token}`
       }
@@ -21,6 +21,9 @@ export const getUserInfo = () => {
       .catch(err => {
         dispatch({type: 'LOGIN_FAILED'});
       })
+    } else {
+      // If there is no token
+      dispatch({type: 'LOGIN_FAILED'});
     }
   }
 
