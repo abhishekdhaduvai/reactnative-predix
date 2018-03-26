@@ -12,9 +12,9 @@ cd reactnative-predix
 
 ### Install tools
 
-Install [node](https://nodejs.org/en/). This includes npm - the node package manager.
-Install Expo for [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en) or for the [iphone](https://itunes.apple.com/us/app/expo-client/id982107779?mt=8).
-Install [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) for iphone simulators or [Genymotion](https://www.genymotion.com/) for Android emulators.
+1. Install [node](https://nodejs.org/en/). This includes npm - the node package manager.
+2. Install Expo for [Android](https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en) or for the [iphone](https://itunes.apple.com/us/app/expo-client/id982107779?mt=8).
+3. Install [Xcode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12) for iphone simulators or [Genymotion](https://www.genymotion.com/) for Android emulators.
 
 
 ### Running the app
