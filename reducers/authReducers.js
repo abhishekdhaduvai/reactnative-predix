@@ -11,6 +11,11 @@ export function auth(state = initialState, action) {
         loading: false,
         username: action.payload.name
       };
+    case 'LOGIN_FAILED':
+      return {
+        ...state,
+        loading: false
+      }
     default:
       return state;
   }

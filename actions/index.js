@@ -18,7 +18,9 @@ export const getUserInfo = () => {
       .then(res => {
         dispatch({type: 'LOGIN_SUCCESS', payload: res.data});
       })
-      .catch(err => console.log('err ', err))
+      .catch(err => {
+        dispatch({type: 'LOGIN_FAILED'});
+      })
     }
   }
 
