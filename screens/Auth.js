@@ -7,6 +7,8 @@ import {
   ActivityIndicator
 } from 'react-native';
 
+import { NavigationActions } from 'react-navigation';
+
 import { connect } from 'react-redux';
 import * as ACTIONS from '../actions';
 
@@ -22,8 +24,21 @@ class Auth extends React.Component {
     this.props.getUserInfo();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.username)
+      this.handleResetNavigationToRoute('Home');
+  }
+
   _handlePressAsync = async () => {
     this.props.getAuthToken();
+  };
+
+  handleResetNavigationToRoute = (routeName) => {
+    const resetAction = NavigationActions.reset({
+      index: 0,
+      actions: [NavigationActions.navigate({routeName})]
+    })
+    this.props.navigation.dispatch(resetAction)
   };
 
   render() {

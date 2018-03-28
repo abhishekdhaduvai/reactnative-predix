@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import { AsyncStorage, Platform } from 'react-native';
 import { AuthSession } from 'expo';
 import axios from 'axios';
 import * as config from '../config';
@@ -11,16 +11,7 @@ export const getUserInfo = () => {
 
     if(token) {
       // If token exists, get userinfo from UAA
-      const headers = {
-        Authorization: `Bearer ${token}`
-      }
-      axios.get(`${config.credentials.uaaURL}/userinfo`, {headers})
-      .then(res => {
-        dispatch({type: 'LOGIN_SUCCESS', payload: res.data});
-      })
-      .catch(err => {
-        dispatch({type: 'LOGIN_FAILED'});
-      })
+      this.makeRequest(dispatch, token);
     } else {
       // If there is no token
       dispatch({type: 'LOGIN_FAILED'});
@@ -53,10 +44,42 @@ export const getAuthToken = () => {
         {headers}
       )
       .then(res => {
+        AsyncStorage.setItem('refresh_token', res.data.refresh_token);
         AsyncStorage.setItem('token', res.data.access_token)
         .then(dispatch(getUserInfo()));
       })
       .catch(err => console.log(err));
     }
   }
+}
+
+makeRequest = (dispatch, token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`
+  }
+  axios.get(`${config.credentials.uaaURL}/userinfo`, {headers})
+  .then(res => {
+    dispatch({type: 'LOGIN_SUCCESS', payload: res.data});
+  })
+  .catch(err => {
+    this.refreshToken(dispatch);
+  });
+}
+
+refreshToken = async (dispatch) => {
+  let token = await AsyncStorage.getItem('refresh_token');
+
+  axios.post(`${config.credentials.uaaURL}/oauth/token?` +
+    `grant_type=refresh_token` +
+    `refresh_token=${token}` +
+    `client_id=${config.credentials.clientID}`
+  )
+  .then(res => {
+    AsyncStorage.setItem('refresh_token', res.data.refresh_token);
+    AsyncStorage.setItem('token', res.data.access_token)
+    .then(dispatch(getUserInfo()));
+  })
+  .catch(err => {
+    dispatch({type: 'LOGIN_FAILED'});
+  })
 }
