@@ -4,29 +4,19 @@ import axios from 'axios';
 import * as config from '../config';
 
 export const getUserInfo = () => {
-  return async (dispatch) => {
+  return (dispatch) => {
 
-    // Try to get token from LocalStorage
-    // let token = await AsyncStorage.getItem('token');
-
-    // if(token) {
-    //   // If token exists, get userinfo from UAA
-    //   this.makeRequest(dispatch, token);
-    // } else {
-    //   // If there is no token
-    //   dispatch({type: 'LOGIN_FAILED'});
-    // }
-
-    SecureStore.getItemAsync('token').then(value => {
-      if(!value) {
+    // Try to get the auth token from SecureStore
+    SecureStore.getItemAsync('token').then(token => {
+      if(!token) {
         dispatch({type: 'LOGIN_FAILED'});
       } else {
-        this.makeRequest(dispatch, value);
+        // If token exists, make request
+        this.makeRequest(dispatch, token);
       }
     });
 
   }
-
 }
 
 export const getAuthToken = () => {
@@ -53,9 +43,6 @@ export const getAuthToken = () => {
         {headers}
       )
       .then(res => {
-        // AsyncStorage.setItem('refresh_token', res.data.refresh_token);
-        // AsyncStorage.setItem('token', res.data.access_token)
-        // .then(dispatch(getUserInfo()));
         SecureStore.setItemAsync('refresh_token', res.data.refresh_token);
         SecureStore.setItemAsync('token', res.data.access_token)
         .then(() => {
@@ -76,26 +63,44 @@ makeRequest = (dispatch, token) => {
     dispatch({type: 'LOGIN_SUCCESS', payload: res.data});
   })
   .catch(err => {
+    /*
+     * If the reqeuest fails with the given auth token,
+     * try to get a new token using the refresh_token from SecureStore.
+     * This is to avoid having the user to login again.
+    */
     this.refreshToken(dispatch);
   });
 }
 
-refreshToken = async (dispatch) => {
-  let token = await AsyncStorage.getItem('refresh_token');
-
-  axios.post(`${config.credentials.uaaURL}/oauth/token?` +
-    `grant_type=refresh_token` +
-    `refresh_token=${token}` +
-    `client_id=${config.credentials.clientID}`
-  )
-  .then(res => {
-    SecureStore.setItemAsync('refresh_token', res.data.refresh_token);
-    SecureStore.setItemAsync('token', res.data.access_token)
-    .then(() => {
-      dispatch(getUserInfo());
+refreshToken = (dispatch) => {
+  // Try to get the refresh_token from SecureStore.
+  SecureStore.getItemAsync('refresh_token')
+  .then(refresh_token => {
+    // If a refresh_token exists, get the auth token using that
+    axios.post(`${config.credentials.uaaURL}/oauth/token?` +
+      `grant_type=refresh_token` +
+      `refresh_token=${token}` +
+      `client_id=${config.credentials.clientID}`
+    )
+    .then(res => {
+      // Store the new auth token, and the new refresh_token in the SecureStore.
+      SecureStore.setItemAsync('refresh_token', res.data.refresh_token);
+      SecureStore.setItemAsync('token', res.data.access_token)
+      .then(() => {
+        dispatch(getUserInfo());
+      });
+    })
+    .catch(err => {
+      /*
+       * If the request to get an auth token using the refresh_token fails,
+       * that means the refresh_token has expired.
+       * The user will have to login again.
+      */
+      dispatch({type: 'LOGIN_FAILED'});
     });
   })
-  .catch(err => {
+  .catch(() => {
+    // If the refresh_token doesn't exist, the user has to login again.
     dispatch({type: 'LOGIN_FAILED'});
-  })
+  });
 }

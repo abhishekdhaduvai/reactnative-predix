@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  StyleSheet, 
-  Text, 
+import {
+  StyleSheet,
+  Text,
   View,
-  Button, 
+  Button,
   AsyncStorage,
   StatusBar,
   ActivityIndicator,
@@ -102,7 +102,12 @@ const Tabs = TabNavigator({
 })
 
 const MainNavigator = StackNavigator({
-  Auth: { screen: Auth },
+  Auth: {
+    screen: Auth,
+    navigationOptions: {
+      header: null
+    }
+  },
   Home: { screen: Tabs },
   initialRouteName: 'Auth'
 });
