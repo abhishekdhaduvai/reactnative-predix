@@ -1,5 +1,5 @@
 import { AsyncStorage, Platform } from 'react-native';
-import { AuthSession } from 'expo';
+import { AuthSession, SecureStore } from 'expo';
 import axios from 'axios';
 import * as config from '../config';
 
@@ -7,15 +7,24 @@ export const getUserInfo = () => {
   return async (dispatch) => {
 
     // Try to get token from LocalStorage
-    let token = await AsyncStorage.getItem('token');    
+    // let token = await AsyncStorage.getItem('token');
 
-    if(token) {
-      // If token exists, get userinfo from UAA
-      this.makeRequest(dispatch, token);
-    } else {
-      // If there is no token
-      dispatch({type: 'LOGIN_FAILED'});
-    }
+    // if(token) {
+    //   // If token exists, get userinfo from UAA
+    //   this.makeRequest(dispatch, token);
+    // } else {
+    //   // If there is no token
+    //   dispatch({type: 'LOGIN_FAILED'});
+    // }
+
+    SecureStore.getItemAsync('token').then(value => {
+      if(!value) {
+        dispatch({type: 'LOGIN_FAILED'});
+      } else {
+        this.makeRequest(dispatch, value);
+      }
+    });
+
   }
 
 }
@@ -35,18 +44,23 @@ export const getAuthToken = () => {
       const headers = {
         Authorization: `Basic ${config.credentials.base64ClientCredentials}`
       }
-      
+
       // Get Auth token from UAA and store it in LocalStorage
       axios.get(`${config.credentials.uaaURL}/oauth/token?`+
         `grant_type=authorization_code` +
         `&response_type=token` +
-        `&code=${params.code}`, 
+        `&code=${params.code}`,
         {headers}
       )
       .then(res => {
-        AsyncStorage.setItem('refresh_token', res.data.refresh_token);
-        AsyncStorage.setItem('token', res.data.access_token)
-        .then(dispatch(getUserInfo()));
+        // AsyncStorage.setItem('refresh_token', res.data.refresh_token);
+        // AsyncStorage.setItem('token', res.data.access_token)
+        // .then(dispatch(getUserInfo()));
+        SecureStore.setItemAsync('refresh_token', res.data.refresh_token);
+        SecureStore.setItemAsync('token', res.data.access_token)
+        .then(() => {
+          dispatch(getUserInfo());
+        });
       })
       .catch(err => console.log(err));
     }
@@ -75,9 +89,11 @@ refreshToken = async (dispatch) => {
     `client_id=${config.credentials.clientID}`
   )
   .then(res => {
-    AsyncStorage.setItem('refresh_token', res.data.refresh_token);
-    AsyncStorage.setItem('token', res.data.access_token)
-    .then(dispatch(getUserInfo()));
+    SecureStore.setItemAsync('refresh_token', res.data.refresh_token);
+    SecureStore.setItemAsync('token', res.data.access_token)
+    .then(() => {
+      dispatch(getUserInfo());
+    });
   })
   .catch(err => {
     dispatch({type: 'LOGIN_FAILED'});
