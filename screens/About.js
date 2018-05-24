@@ -9,7 +9,8 @@ class About extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>ABOUT</Text>
+        <Text style={{margin: 5}}>ABOUT</Text>
+        <Text>Edit screens/About.js to customize this screen</Text>
       </View>
     )
   }

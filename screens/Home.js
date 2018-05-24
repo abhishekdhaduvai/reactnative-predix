@@ -9,7 +9,8 @@ class Home extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>HOME</Text>
+        <Text style={{margin: 5}}>HOME</Text>
+        <Text>Edit screens/Home.js to customize this screen</Text>
       </View>
     )
   }

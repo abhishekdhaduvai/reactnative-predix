@@ -9,7 +9,8 @@ class Analytics extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>ANALYTICS</Text>
+        <Text style={{margin: 5}}>ANALYTICS</Text>
+        <Text>Edit screens/Analytics.js to customize this screen</Text>
       </View>
     )
   }

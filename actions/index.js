@@ -6,6 +6,10 @@ import * as config from '../config';
 export const getUserInfo = () => {
   return async (dispatch) => {
 
+    // if(Platform.OS === 'android') {
+    //   dispatch({type: 'LOGIN_SUCCESS', payload: {name: 'Abhishek'}});
+    // }
+
     // Try to get token from LocalStorage
     let token = await AsyncStorage.getItem('token');    
 
