@@ -1,9 +1,9 @@
 import React from 'react';
-import { 
-  StyleSheet, 
-  Text, 
+import {
+  StyleSheet,
+  Text,
   View,
-  Button, 
+  Button,
   AsyncStorage,
   StatusBar,
   ActivityIndicator,
@@ -25,6 +25,9 @@ import About from './screens/About';
 import Analytics from './screens/Analytics';
 
 const ACTIVE_TINT_COLOR = 'white';
+const STATUS_BAR_BG = '#111';
+const HEADER_BG = '#111';
+
 
 function AppStatusBar({backgroundColor, ...props}){
   return(
@@ -38,6 +41,7 @@ const Tabs = TabNavigator({
   Home: {
     screen: Home,
     navigationOptions: {
+      title: 'Home',
       tabBarLabel: 'Home',
       tabBarIcon: ({ tintColor }) => {
         if(tintColor === ACTIVE_TINT_COLOR)
@@ -50,6 +54,7 @@ const Tabs = TabNavigator({
   Analytics: {
     screen: Analytics,
     navigationOptions: {
+      title: 'Analytics',
       tabBarLabel: 'Analytics',
       tabBarIcon: ({ tintColor }) => {
         if(tintColor === ACTIVE_TINT_COLOR)
@@ -62,6 +67,7 @@ const Tabs = TabNavigator({
   About: {
     screen: About,
     navigationOptions: {
+      title: 'About',
       tabBarLabel: 'About',
       tabBarIcon: ({ tintColor }) => {
         if(tintColor === ACTIVE_TINT_COLOR)
@@ -74,8 +80,14 @@ const Tabs = TabNavigator({
 }, {
   ...TabNavigator.Presets.iOSBottomTabs,
   navigationOptions: {
-    header: null,
     swipeEnabled: false,
+    headerTitleStyle: {
+      color: 'white',
+      textAlign: 'center'
+    },
+    headerStyle: {
+      backgroundColor: HEADER_BG
+    },
   },
   tabBarOptions: {
     activeTintColor: ACTIVE_TINT_COLOR,
@@ -90,13 +102,14 @@ const Tabs = TabNavigator({
 })
 
 const MainNavigator = StackNavigator({
-  Auth: { screen: Auth },
+  Auth: {
+    screen: Auth,
+    navigationOptions: {
+      header: null
+    }
+  },
   Home: { screen: Tabs },
   initialRouteName: 'Auth'
-}, {
-  navigationOptions: {
-    header: null
-  }
 });
 
 export default class App extends React.Component {
@@ -105,7 +118,7 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <View style={styles.container}>
-          <AppStatusBar backgroundColor={'#111'} barStyle='light-content' />
+          <AppStatusBar backgroundColor={STATUS_BAR_BG} barStyle='light-content' />
           <MainNavigator />
         </View>
       </Provider>
